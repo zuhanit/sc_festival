@@ -1,0 +1,18 @@
+import scene.main as scene;
+import player.main as pm;
+import player.player;
+import character.character;
+
+const sb = StringBuffer();
+
+function onPluginStart() {
+    player.init();
+    character.init();
+    CreateUnit(1, "Protoss Marker", "center", P8);
+    GiveUnits(1, "Protoss Marker", P8, "center", P12);
+}
+
+function afterTriggerExec() {
+    scene.sceneLoop();
+    pm.playerLoop();
+}
