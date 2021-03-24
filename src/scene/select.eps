@@ -1,0 +1,76 @@
+import character.character as char;
+import player.player;
+import tools.CUnit;
+import tools.effect;
+import scene.main as sm;
+
+const sb = StringBuffer();
+const clickedArray = [0, 0, 0, 0, 0, 0];
+const isSelected = [0, 0, 0, 0, 0, 0];
+const textBuffer = EUDArray(6);
+var existBuffer = 0;
+
+
+function displayCharacterDesc();
+
+function main() {
+    for (var p = 0; p < 6; p++) {
+        if (isSelected[p] == 0) {
+            setcurpl(p);
+            sb.insert(0);
+            sb.append("\t\x11※ \x04한 번 클릭해 \x19설명을 보고, \x04다시 클릭해 \x1B파트너를 선택\x04할 수 있답니다.\x12\x1e아직 선택하지 못한 플레이어 ▼\n\t\x1e~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x12");
+            for (var i = 0; i < 6; i++) {
+                const tempObj = player.PlayerInfo.cast(player.playersInfo[i]);
+                if (tempObj.exist == 1 && isSelected[i] == 0) {
+                    sb.append(PColor(i), "■");
+                }
+            }
+            sb.append("\n");
+            displayCharacterDesc(p);
+            sb.append(epd2s(textBuffer[p]));
+            sb.DisplayAt(0);
+        }
+        if (isSelected[p] == 1) {
+            sb.printf("\n\n\n\n\n\x13\x19{:t}\x04을(를) 선택하셨습니다!\n\n\n\n\n", textBuffer[p]);
+            isSelected[p]++;
+        }
+    }
+    if (player.playerCount == existBuffer) {
+        sm.nextScene();
+    }
+}
+
+// 플레이 중인 유저의 총합 == isSelected의 총합이면 모두가 선택
+
+function displayCharacterDesc(p) {
+    SetResources(P1, SetTo, 2, Gas);
+    for (var i = 1; i <= 17; i++) {
+        if (MemoryEPD(EPD(0x6284E8) + 12 * p, Exactly, CUnit.index2ptr(i))) {
+            SetResources(P1, SetTo, i, Ore);
+            if (clickedArray[p] != i) {
+                const charObj = char.Character.cast(char.characters[i-1]);
+                MoveLocation("sysEffect", charObj.unit, P12, "Anywhere");
+                effect.effect("Carrier", "sysEffect", "burrowed");
+                GiveUnits(1, charObj.unit, P12, "Anywhere", P11);
+                GiveUnits(1, charObj.unit, P11, "Anywhere", P12);
+                clickedArray[p] = i;
+                textBuffer[p] = charObj.description;
+                PlayWAV("staredit\\wav\\Upgrade.ogg");
+            } else {
+                const charObj = char.Character.cast(char.characters[i-1]);
+                const playerObj = player.Player.cast(player.players[p]);
+                MoveLocation("sysEffect", charObj.unit, P12, "Anywhere");
+                effect.effect("Kakaru (Twilight)", "sysEffect", "air");
+                GiveUnits(1, charObj.unit, P12, "Anywhere", p);
+                SetInvincibility(Enable, charObj.unit, p, "Anywhere");
+                textBuffer[p] = charObj.name;
+                playerObj.character = i;
+                playerObj.epd = EPD(CUnit.index2ptr(i));
+                playerObj.skillFuncPtr = charObj.skillFuncPtr;
+                SetMemoryXEPD(playerObj.epd + 0x98/4, SetTo, 0, 0xFFFF);
+                isSelected[p]++;
+                existBuffer++;
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+function globalSound(wavName: TrgString) {
+    for(var player = 0 ; player < 6 ; player++) {
+        SetCurrentPlayer(player);
+        PlayWAV(wavName);
+    }
+}

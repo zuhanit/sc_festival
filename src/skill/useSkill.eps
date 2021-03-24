@@ -1,0 +1,12 @@
+import player.player;
+import player.skill;
+
+const s = StringBuffer();
+
+function loop() {
+    for (var p = 0; p < 6; p++) {
+        setcurpl(p);
+        const obj = player.Player.cast(player.players[p]);
+        obj.skillFuncPtr();
+    }
+}

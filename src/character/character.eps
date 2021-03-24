@@ -1,0 +1,56 @@
+import character.skill.alice;
+import character.skill.dark;
+import character.skill.devouring;
+import character.skill.ether;
+import character.skill.fenix;
+import character.skill.ferr;
+import character.skill.ikerr;
+import character.skill.ith;
+import character.skill.lepenus;
+import character.skill.letex;
+import character.skill.mask;
+import character.skill.noname;
+import character.skill.senn;
+import character.skill.sunstriker;
+import character.skill.unclean;
+import character.skill.zeratul;
+
+const characters = EUDArray(16);
+var characterCount = 0;
+
+object Character {
+    var name;
+    var unit: TrgUnit;
+    var description;
+    var skillFuncPtr;
+};
+
+function registerCharacter(name, unit:TrgUnit, skillFuncPtr: EUDFuncPtr(0, 0), description) {
+    const obj = Character.alloc();
+    obj.name = name;
+    obj.unit = unit;
+    obj.description = description;
+    obj.skillFuncPtr = skillFuncPtr;
+    characters[characterCount] = obj;
+    characterCount++;
+}
+
+function init() {
+    //registerCharacter("에세르", "Infested Kerrigan", ether.f_skill), "\t\x1F에세르\x04는 \x19W 깊은 어둠\x04을 다른 스킬과 병용하여 사용할 수 있습니다.\n\t\x04자신과 상대의 자리를 바꾸며 자신이 상황을 만들어 전투하는 캐릭터입니다.\n\n\t\x18(\x07P\x18) \x04역류\n\t\x18(\x07Q\x18) \x04잘라내기\n\t\x18(\x07QQQ\x18) \x04광기의 구슬\n\t\x18(\x07QW\x18) \x04역병구역\n\t\x18(\x07W\x18) \x04깊은 어둠\n\t\x18(\x07E\x18) \x04긿을 잃어버렸다");
+    registerCharacter(EPD(Db("에세르")), "Infested Kerrigan", EUDFuncPtr(0, 0)(ether.f_skill), EPD(Db("\t\x1F에세르\x04는 \x19W 깊은 어둠\x04을 다른 스킬과 병용할 수 있습니다.\n\t\x04자신과 상대의 자리를 바꾸며 자신이 상황을 만들어 전투하는 캐릭터입니다.\n\n\t\x18(\x07P\x18) \x04역류\n\t\x18(\x07Q\x18) \x04잘라내기\n\t\x18(\x07QQQ\x18) \x04광기의 구슬\n\t\x18(\x07QW\x18) \x04역병구역\n\t\x18(\x07W\x18) \x04깊은 어둠\n\t\x18(\x07E\x18) \x04긿을 잃어버렸다")));
+    registerCharacter(EPD(Db("다크")), "Protoss Dark Templar", EUDFuncPtr(0, 0)(dark.f_skill), EPD(Db("다크 설명")));
+    registerCharacter(EPD(Db("엘리스")), "Terran Medic", EUDFuncPtr(0, 0)(alice.f_skill), EPD(Db("엘리스 설명")));
+    registerCharacter(EPD(Db("이스")), "Protoss Zealot", EUDFuncPtr(0, 0)(ith.f_skill), EPD(Db("\t\x1F이스\x04는 스킬의 딜레이가 \x19매우 적습니다\x04.\n\t\x04상대가 예상하지 못한 타이밍에 빠르게 공격하는 캐릭터입니다.\n\n\t\x18(\x07P\x18) \x04전투 중독\n\t\x18(\x07Q\x18) \x043번 베기\t\x18(\x07QQ\x18) \x04몸 가르기\n\t\x18(\x07QW\x18) \x04도살, 박피.\n\t\x18(\x07W\x18) \x04들이박기\n\t\x18(\x07WW\x18) \x04관절 적출\n\t\x18(\x07E\x18) \x04방어 태세")));
+    registerCharacter(EPD(Db("레텍스")), "Protoss High Templar", EUDFuncPtr(0, 0)(letex.f_skill), EPD(Db("레텍스 설명")));
+    registerCharacter(EPD(Db("페르")), "Terran Marine", EUDFuncPtr(0, 0)(ferr.f_skill), EPD(Db("\t\x1F페르\x04는 \x19세 가지 형태로 변신\x04할 수 있습니다.\n\t\x04상황에 적합하게 변신하는 것이 중요한 캐릭터입니다.\n\n\t\x18(\x07P\x18) \x04인간성\n\t\x18(\x07Q\x18) \x04돌 던지기\n\t\x18(\x07QW\x18) \x04\n\t\x18(\x07W\x18) \x04\n\t\x18(\x07WW\x18) \x04\n\t\x18(\x07E\x18) \x04변신!")));
+    registerCharacter(EPD(Db("레페누스")), "Alexei Stukov", EUDFuncPtr(0, 0)(lepenus.f_skill), EPD(Db("레페누스 설명")));
+    registerCharacter(EPD(Db("마스크")), "Terran Firebat", EUDFuncPtr(0, 0)(mask.f_skill), EPD(Db("마스크 설명")));
+    registerCharacter(EPD(Db("센")), "Hunter Killer", EUDFuncPtr(0, 0)(senn.f_skill), EPD(Db("센 설명")));
+    registerCharacter(EPD(Db("선스트라이커")), "Zerg Drone", EUDFuncPtr(0, 0)(sunstriker.f_skill), EPD(Db("선스트라이커 설명")));
+    registerCharacter(EPD(Db("이케르")), "Terran Ghost", EUDFuncPtr(0, 0)(ikerr.f_skill), EPD(Db("이케르 설명")));
+    registerCharacter(EPD(Db("언클린")), "Unclean One", EUDFuncPtr(0, 0)(unclean.f_skill), EPD(Db("언클린 설명")));
+    registerCharacter(EPD(Db("페닉스")), "Fenix (Zealot)", EUDFuncPtr(0, 0)(fenix.f_skill), EPD(Db("페닉스 설명")));
+    registerCharacter(EPD(Db("제라툴")), "Zeratul", EUDFuncPtr(0, 0)(zeratul.f_skill), EPD(Db("제라툴 설명")));
+    registerCharacter(EPD(Db("디바우링")), "Devouring One", EUDFuncPtr(0, 0)(devouring.f_skill), EPD(Db("디바우링 설명")));
+    registerCharacter(EPD(Db("노네임")), "Terran Goliath", EUDFuncPtr(0, 0)(noname.f_skill), EPD(Db("노네임 설명")));
+}

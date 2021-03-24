@@ -1,0 +1,12 @@
+import player.player;
+
+function existCheck() {
+    for (var p = 0; p < 6; p++) {
+        const obj = player.PlayerInfo.cast(player.playersInfo[p]);
+        if (!playerexist(p) && obj.exist == 1) {
+            obj.exist = 0;
+            player.Player.free(obj);
+            player.playerCount--;
+        }
+    }
+}

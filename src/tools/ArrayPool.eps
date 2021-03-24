@@ -1,0 +1,19 @@
+const objectN = 32768;
+const size = 5;
+const buffer = EUDArray(objectN * size);
+const offset = EUDArray(objectN);
+var remaining = objectN;
+
+function init() {
+    for(var i = 0; i < objectN; i += 1) {
+        offset[i] = 4 * size * i;
+    }
+}
+function alloc(): EUDArray {
+    remaining -= 1;
+    return buffer + offset[remaining];
+}
+function free(array) {
+    offset[remaining] = array - buffer;
+    remaining += 1;
+}

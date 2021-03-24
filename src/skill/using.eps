@@ -1,0 +1,29 @@
+import skill.skillType;
+
+object Using {
+    var q;
+    var w;
+    var e;
+    function checker(target: skillType.TrgType) {
+        switch (target) {
+            case 0:
+                if (this.q == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            case 1:
+                if (this.w == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            case 2:
+                if (this.e == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+        }
+    }
+};

@@ -1,0 +1,29 @@
+import tools.effect;
+import scene.main as sm;
+import tools.sound;
+
+const OPENING_TIME = 24;
+
+function main() {
+    var timer;
+    timer++;
+
+    if (IsUserCP()) {
+        if (timer == OPENING_TIME + 1) {DisplayText("\n\n\n\n\x13\x05F E S T I V A L\n\x13\x05밤의 대잔치\n\n\n\n\n"); PlayWAV("staredit\\wav\\Pzzan.wav");}
+        if (timer == OPENING_TIME + 2) {DisplayText("\n\n\n\n\x13\x1eF E S T I V A L\n\x13\x1e밤의 대잔치\n\n\n\n\n");}
+        if (timer == OPENING_TIME + 3) {DisplayText("\n\n\n\n\x13\x01F E S T I V A L\n\x13\x02밤의 대잔치\n\n\n\n\n");}
+        if (timer == OPENING_TIME + 4) {DisplayText("\n\n\n\n\x13\x04F E S T I V A L\n\x13\x04밤의 대잔치\n\n\n\n\n");}
+        if (timer >= OPENING_TIME + 5 && timer <= OPENING_TIME + 29) {DisplayText("\n\n\n\n\x13\x04F E S T I V A L\n\x13\x19밤의 대잔치\n\n\n\n\n");}
+        if (timer == OPENING_TIME + 30) {DisplayText("\n\n\n\n\x13\x04F E S T I V A L\n\x13\x04밤의 대잔치\n\n\n\n\n");}
+        if (timer == OPENING_TIME + 31) {DisplayText("\n\n\n\n\x13\x01F E S T I V A L\n\x13\x02밤의 대잔치\n\n\n\n\n");}
+        if (timer == OPENING_TIME + 32) {DisplayText("\n\n\n\n\x13\x1eF E S T I V A L\n\x13\x1e밤의 대잔치\n\n\n\n\n");}
+        if (timer == OPENING_TIME + 33) {DisplayText("\n\n\n\n\x13\x05F E S T I V A L\n\x13\x05밤의 대잔치\n\n\n\n\n");}
+        if (timer >= OPENING_TIME + 34 && timer <= OPENING_TIME + 60) {DisplayText("\n\n\n\n\n\n\n\n\n\n\n");}
+    }
+    if (timer == OPENING_TIME + 61) {CreateUnit(1, "Map Revealer", "center", P1);}
+    if (timer == OPENING_TIME + 66) {KillUnit("Zerg Zergling", P12);}
+    if (timer == OPENING_TIME + 72) {KillUnit("Vulture Spider Mine", P12);}
+    if (timer == OPENING_TIME + 75) {effect.effect("Carrier", "center", "air"); effect.effect("Dark Archon Death", "center", "scan");}
+    if (timer == OPENING_TIME + 78) {effect.effect("Bengalaas", "center", "ground"); effect.effect("Spider Mine Death", "center", "scan");}
+    if (timer == OPENING_TIME + 79) {RemoveUnit("Protoss Marker", P12); sound.globalSound("staredit\\wav\\bonus.wav"); sm.nextScene();}
+}

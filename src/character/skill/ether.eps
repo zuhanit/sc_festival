@@ -1,0 +1,22 @@
+/*
+P 역류
+Q 잘라내기
+QQQ 구슬
+QW 역병구역
+W 깊은어둠
+E 잃었다
+*/
+
+import player.skill;
+import player.player;
+
+function skill() {
+    const cp = getcurpl();
+    const obj = skill.Skill.cast(player.playersSkill[cp]);
+    if (obj.using() == 0) {
+        if (obj.read() == 1) {
+            obj.dequeue();
+            DisplayText("Hello!");
+        }
+    }
+}

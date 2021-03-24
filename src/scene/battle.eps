@@ -1,0 +1,29 @@
+import tools.effect;
+import player.player;
+import skill.main as sm;
+
+function start();
+
+function main() {
+    once {
+        start();
+    }
+    sm.skillLoop();
+}
+
+function start() {
+    for (var i = 0; i < 6; i++) {
+        setcurpl(i);
+        DisplayText("\n\n\n\n\n\x13\x11< \x1B대잔치\x04가 시작되었습니다! \x11>\n\n\n\n\n");
+        PlayWAV("staredit\\wav\\Mana Shield.wav");
+        PlayWAV("staredit\\wav\\Portal1.wav");
+        const tempObj = player.PlayerInfo.cast(player.playersInfo[i]);
+        if (tempObj.exist == 1) {
+            SetInvincibility(Disable, "(any unit)", i, "field");
+            MoveLocation("sysEffect", "(any unit)", i, "field");
+            CenterView("sysEffect");
+            effect.effect("Carrier", "sysEffect", "air");
+            effect.effect("Recall", "sysEffect", "scan");
+        }
+    }
+}

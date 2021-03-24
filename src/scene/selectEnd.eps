@@ -1,0 +1,34 @@
+import scene.main as sm;
+import timeline as tL;
+
+const sb = StringBuffer();
+var timer = 0;
+var lastTime = 0;
+
+function main() {
+
+    if (timer < 24) {timer++;}
+    if (timer == 1) {
+        CreateUnit(1, "Protoss Marker", "center", P8);
+        GiveUnits(1, "Protoss Marker", P8, "center", P12);
+    }
+    if (timer == 23) {
+        RemoveUnitAt(All, "(any unit)", "center", P12);
+    }
+    if (timer == 24) {
+        SetResources(P1, SetTo, 5000, Ore);
+        foreach (t : tL.Timeline(25)) {
+            if (t == 24 && lastTime < 6) {
+                for (var p = 0; p < 6; p++) {
+                    setcurpl(p);
+                    PlayWAV("sound\\glue\\countdown.wav");
+                    sb.print("\n\n\n\n\x13\x19", 5 - lastTime, "초 후 \x04잔치가 시작됩니다!\n\x13\x1E주변 사람을 조심하세요!\n\n\n\n\n");
+                }
+                lastTime++;
+            }
+        }
+    }
+    if (lastTime == 6) {
+        sm.nextScene();
+    }
+}

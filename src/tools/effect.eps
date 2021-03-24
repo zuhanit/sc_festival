@@ -1,0 +1,51 @@
+import tools.fxType;
+import tools.CUnit;
+
+const GROUND_NUM = 381;
+const AIR_NUM = 382;
+const SCAN_NUM = 380;
+
+function setGraphic(unit, target) {
+    var mask;
+    switch (unit % 2) {
+        case 0:
+            mask = 0x0000FFFF;
+            break;
+
+        case 1:
+            mask = 0xFFFF0000;
+            target = target*65536;
+            break;
+    }
+    SetMemoryX(0x666160 + (unit*2), SetTo, target, mask);
+}
+
+function effect(target: fxType.TrgImage, location: TrgLocation, type:fxType.EffectType) {
+    var unit;
+    var sprite;
+    switch(type) {
+    case 0:
+        sprite = GROUND_NUM;
+        unit = $U("groundEffect");
+        break;
+    case 1:
+        sprite = AIR_NUM;
+        unit = $U("airEffect");
+        break;
+    case 2:
+        sprite = SCAN_NUM;
+        unit = $U("Scanner Sweep");
+        break;
+    case 3:
+        unit = $U("Devouring One");
+        const dEpd = CUnit.nextUnitEPD();
+        CreateUnitWithProperties(1, unit, "wait_1", P8, UnitProperty(burrowed = true, hallucinated = true));
+        MoveUnit(1, unit, P8, "wait_1", location);
+        SetMemoryXEPD(dEpd + 0x110/4, SetTo, 1, 0xFFFF);
+        return;
+    }
+    setGraphic(sprite, target);
+    const epd = CUnit.nextUnitEPD();
+    CreateUnit(1, unit, location, P8);
+    SetMemoryXEPD(epd + 0x110/4, SetTo, 1, 0xFFFF);
+}

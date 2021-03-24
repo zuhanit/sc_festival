@@ -1,0 +1,39 @@
+import skill.using;
+
+object Skill {
+    var queue: EUDArray;
+    var front;
+    var rear;
+    var q;
+    var w;
+    var e;
+
+    function enqueue(x) {
+        this.queue[this.rear] = x;
+        this.rear = this.rear + 1 % 20;
+    }
+
+    function dequeue() {
+        const data = this.queue[this.front];
+        this.queue[this.front] = 0;
+        this.front = this.front + 1 % 20;
+        return data;
+    }
+
+    function read() {
+        const data = this.queue[this.front];
+        return data;
+    }
+
+    function init() {
+        this.queue = EUDArray(20);
+    }
+
+    function using() {
+        var k = 0;
+        if (this.q > 0) {k = 1;}
+        if (this.w > 0) {k = 2;}
+        if (this.e > 0) {k = 3;}
+        return k;
+    }
+};

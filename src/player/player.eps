@@ -1,0 +1,46 @@
+object Player {
+    var epd;
+    var character;
+    var hp;
+    var mp;
+    var statusFlag;
+    var skillFuncPtr: EUDFuncPtr(0, 0);
+};
+
+object PlayerInfo {
+    var exist;
+    var name;
+    function isExist() {
+        if (this.exist == 1) {
+            return true;
+        }
+    }
+};
+
+import player.skill;
+
+const players = EUDArray(6);
+const playersInfo = EUDArray(6);
+const playersSkill = EUDArray(6);
+var playerCount;
+
+function noFunc() {
+}
+
+function init() {
+    for (var p = 0; p < 6; p++) {
+        const pObj = Player.alloc();
+        const piObj = PlayerInfo.alloc();
+        const psObj = skill.Skill.alloc();
+        players[p] = pObj;
+        pObj.skillFuncPtr = EUDFuncPtr(0, 0)(f_noFunc);
+        playersInfo[p] = piObj;
+        psObj.init();
+        playersSkill[p] = psObj;
+        if (playerexist(p)) {
+            const obj = PlayerInfo.cast(playersInfo[p]);
+            obj.exist = 1;
+            playerCount++;
+        }
+    }
+}
