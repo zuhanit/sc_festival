@@ -1,8 +1,6 @@
 import player.player;
 import player.skill;
 
-const s = StringBuffer();
-
 const skillUnits = [$U("qUnit"), $U("wUnit"), $U("eUnit"), $U("healUnit"), $U("infoUnit")];
 const skillManas = [15, 20, 30, 20, 0];
 
@@ -17,12 +15,11 @@ function loop() {
             if(MemoryXEPD(epd + 0x98/4, Exactly, skillUnits[i] * 65536, 0xFFFF0000)) {
                 SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
                 if (MemoryXEPD(epd + 0xA2/4, AtLeast, skillManas[i], 0xFFFF0000)) {
-                    setcurpl(p);
-                    DisplayText("\x04\x13asd");
                     SetMemoryEPD(epd + 0xA2/4, Subtract, skillManas[i] * 256 * 65536);
                     psObj.enqueue(i + 1);
                 } else {
                     setcurpl(p);
+                    SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
                     DisplayText("\x04\x13마나가 부족합니다!");
                 }
             }

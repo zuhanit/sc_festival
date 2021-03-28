@@ -43,10 +43,8 @@ function main() {
 // 플레이 중인 유저의 총합 == isSelected의 총합이면 모두가 선택
 
 function displayCharacterDesc(p) {
-    SetResources(P1, SetTo, 2, Gas);
     for (var i = 1; i <= 17; i++) {
         if (MemoryEPD(EPD(0x6284E8) + 12 * p, Exactly, CUnit.index2ptr(i))) {
-            SetResources(P1, SetTo, i, Ore);
             if (clickedArray[p] != i) {
                 const charObj = char.Character.cast(char.characters[i-1]);
                 MoveLocation("sysEffect", charObj.unit, P12, "Anywhere");
