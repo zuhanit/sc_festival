@@ -10,7 +10,7 @@ E 잃었다
 import player.skill;
 import player.player;
 
-function skill() {
+function skill(pObj, psObj, cObj) {
     const cp = getcurpl();
     const obj = skill.Skill.cast(player.playersSkill[cp]);
     if (obj.using() == 0) {

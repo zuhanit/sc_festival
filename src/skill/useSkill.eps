@@ -4,7 +4,9 @@ import player.skill;
 function loop() {
     for (var p = 0; p < 6; p++) {
         setcurpl(p);
-        const obj = player.Player.cast(player.players[p]);
-        obj.skillFuncPtr();
+        const pObj = player.Player.cast(player.players[p]);
+        const psObj = player.Player.cast(player.playersSkill[p]);
+        const cObj = character.Character.cast(character.characters[psObj.character]);
+        obj.skillFuncPtr(pObj, psObj, cObj);
     }
 }
