@@ -4,9 +4,10 @@ import tools.speaker;
 import tools.CUnit;
 import tools.effect;
 
-function death() {
+function loop() {
     const pObj = player.Player.cast(players[p]);
     const cObj = character.Character.cast(character.characters[pObj.character]);
+    var invincibleCount;
     if (Deaths(p, Exactly, 1, cObj.unit)) {
         speaker.globalText(cObj.name, "이 파티에서 도망쳤습니다!" );
         var deathCount;
@@ -16,14 +17,15 @@ function death() {
         } else {
             cObj.epd = CUnit.nextUnitEPD();
             CreateUnitWithProperties(1, cObj.unit, "center", p, UnitProperty(invincible = true));
-            var invincibleCount;
-            if (invincibleCount <= 24*5) {
-                invincibleCount++;
-                effect.effect(0, "sysEffect", "burrowed");
-            } else {
-                SetInvincibility(Disable, cObj.unit, p, "Anywhere");
-                invincibleCount = 0;
-            }
+            var invincibleCount = 24*5;
         }
+    }
+
+    if (invincibleCount <= 24*5) {
+        invincibleCount++;
+        effect.effect(0, "sysEffect", "burrowed");
+    } else {
+        SetInvincibility(Disable, cObj.unit, p, "Anywhere");
+        invincibleCount = 0;
     }
 }
