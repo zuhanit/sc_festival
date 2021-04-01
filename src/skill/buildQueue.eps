@@ -13,14 +13,14 @@ function loop() {
         SetMemoryXEPD(epd + 0xA2/4, SetTo, 228, 0xFFFF);
         for (var i = 0; i < 5; i++) {
             if(MemoryXEPD(epd + 0x98/4, Exactly, skillUnits[i] * 65536, 0xFFFF0000)) {
-                SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
-                if (MemoryXEPD(epd + 0xA2/4, AtLeast, skillManas[i], 0xFFFF0000)) {
+                if (MemoryXEPD(epd + 0xA2/4, AtLeast, skillManas[i] * 256 * 65536 , 0xFFFF0000)) {
+                    SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
                     SetMemoryEPD(epd + 0xA2/4, Subtract, skillManas[i] * 256 * 65536);
                     psObj.enqueue(i + 1);
                 } else {
                     setcurpl(p);
-                    SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
                     DisplayText("\x04\x13마나가 부족합니다!");
+                    SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
                 }
             }
         }
