@@ -1,30 +1,63 @@
-/*
-P 역류
-Q 잘라내기
-QQQ 구슬
-QW 역병구역
-W 깊은어둠
-E 잃었다
-*/
-
 import player.skill;
+import player.queue;
 import player.player;
+import tools.effect as ef;
 
-function skill(pObj, psObj, cObj) {
+var timer;
+
+function skill() {
     const cp = getcurpl();
-    const obj = skill.Skill.cast(player.playersSkill[cp]);
-    if (obj.using() == 0) {
-        if (obj.read() == 1) {
-            obj.dequeue();
-            DisplayText("Hello!");
+    const psObj = skill.Skill.cast(player.playersSkill[cp]);
+    const pqObj = queue.Queue.cast(player.playersQueue[cp]);
+    if (psObj.using() == 0) {
+        if (pqObj.read(0) == 1) {
+            DisplayText("\t\x18(\x07Q\x18) \x04잘라내기");
+            pqObj.dequeue();
+            psObj.q = 1;
         }
-        if (obj.read() == 2) {
-            obj.dequeue();
-            DisplayText("22222!");
+    }
+    if (psObj.q == 1) {
+        timer += 1;
+        if (timer == 1) {
+            ef.effect("Overlord", $L("p1_move_5x5") + cp, "air");
+            ef.effect("Scanner Sweep", $L("p1_move_5x5") + cp, "scan");
         }
-        if (obj.read() == 3) {
-            obj.dequeue();
-            DisplayText("33333!");
+        if (timer == 12) {
+            if (pqObj.read(0) == 1 && pqObj.read(1) == 1) {
+                DisplayText("\t\x18(\x07QQQ\x18) \x04광기의 구슬");
+                pqObj.dequeue();
+                pqObj.dequeue();
+                psObj.q = 2;
+                timer = 0;
+            }
+            if (pqObj.read(0) == 2) {
+                DisplayText("\t\x18(\x07QW\x18) \x04역병구역");
+                pqObj.dequeue();
+                psObj.q = 3;
+                timer = 0;
+            }
+        }
+        if (timer == 13) {
+            const foesLocation = $L("p1_foes") + cp;
+            PlayWAV("staredit\\wav\\Rogue_Eviscerate_Impact_1.ogg");
+            CreateUnit(1, "Torrasque", "wait_1", CurrentPlayer);
+            MoveUnit(1, "Torrasque", CurrentPlayer, "wait_all", foesLocation);
+            Order("Torrasque", CurrentPlayer, "Anywhere", Attack, "Anywhere");
+            ef.effect("Guardian", foesLocation, "air");
+            ef.effect("Zergling", foesLocation, "ground");
+        }
+        if (timer == 14) {
+            const foesLocation = $L("p1_foes") + cp;
+            ef.effect("Scourge", foesLocation, "air");
+        }
+        if (timer == 26) {
+            const effectLocation = $L("p1_act_1") + cp;
+            MoveLocation(effectLocation, "Torrasque", CurrentPlayer, "Anywhere");
+            ef.effect("Zergling", effectLocation, "ground");
+            KillUnit("Torrasque", CurrentPlayer);
         }
     }
 }
+
+// 1000ms = 24
+// 500ms = 12
