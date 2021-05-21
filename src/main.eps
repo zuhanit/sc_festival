@@ -2,10 +2,12 @@ import scene.main as scene;
 import player.main as pm;
 import player.player;
 import character.character;
+import any;
 
 const sb = StringBuffer();
 
 function onPluginStart() {
+    any.OnInit();
     player.init();
     character.init();
     CreateUnit(1, "Protoss Marker", "center", P8);
