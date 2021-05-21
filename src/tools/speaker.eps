@@ -1,0 +1,20 @@
+import player.player;
+import character.character;
+
+function globalAudio() {
+
+}
+
+function localAudio(soundName: TrgString, ownerPlayer) {
+    const characterLocation = $L("p1_move_5x5") + ownerPlayer;
+    const oldcp = getcurpl();
+    for (var p = 0; p < 6; p++) {
+        setcurpl(p);
+        const characterObj = character.Character.cast(character.characters[p]);
+        const characterUnit = characterObj.unit;
+        if (Bring(p, AtLeast, 1, characterUnit, characterLocation)) {
+            PlayWAV(soundName);
+        }
+    }
+    setcurpl(oldcp);
+}
