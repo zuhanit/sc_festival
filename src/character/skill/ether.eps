@@ -2,16 +2,30 @@ import player.skill;
 import player.queue;
 import player.player;
 import tools.effect as ef;
+import tools.speaker;
+import timeline as tL;
+import py_math;
 
 var timer;
 
 function skill() {
     const cp = getcurpl();
+    const characterLocation = $L("p1_move_5x5") + cp;
+    const foesLocation = $L("p1_foes") + cp;
+    const effectLocation = $L("p1_act_1") + cp;
+    const effectLocation2 = $L("p1_act_1") + cp;
+    const waitLocation = $L("wait_1") + cp;
+
     const psObj = skill.Skill.cast(player.playersSkill[cp]);
     const pqObj = queue.Queue.cast(player.playersQueue[cp]);
+
     if (psObj.using() == 0) {
         if (pqObj.read(0) == 1) {
             DisplayText("\t\x18(\x07Q\x18) \x04잘라내기");
+            CreateUnitWithProperties(1, "Protoss Arbiter", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+            CreateUnitWithProperties(1, "Zerg Mutalisk", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+            GiveUnits(1, "Protoss Arbiter", CurrentPlayer, waitLocation, P12);
+            GiveUnits(1, "Zerg Mutalisk", CurrentPlayer, waitLocation, P12);
             pqObj.dequeue();
             psObj.q = 1;
         }
@@ -19,8 +33,9 @@ function skill() {
     if (psObj.q == 1) {
         timer += 1;
         if (timer == 1) {
-            ef.effect("Overlord", $L("p1_move_5x5") + cp, "air");
-            ef.effect("Scanner Sweep", $L("p1_move_5x5") + cp, "scan");
+            speaker.localAudio("staredit\\wav\\Rogue_Eviscerate_Impact_1.ogg", cp);
+            ef.effect("Overlord", characterLocation, "air");
+            ef.effect("Recall Field", characterLocation, "scan");
         }
         if (timer == 12) {
             if (pqObj.read(0) == 1 && pqObj.read(1) == 1) {
@@ -38,23 +53,96 @@ function skill() {
             }
         }
         if (timer == 13) {
-            const foesLocation = $L("p1_foes") + cp;
-            PlayWAV("staredit\\wav\\Rogue_Eviscerate_Impact_1.ogg");
+            MoveLocation(foesLocation, "(any unit)", Foes, characterLocation);
+            speaker.localAudio("staredit\\wav\\Rogue_Eviscerate_Impact_1.ogg", cp);
             CreateUnit(1, "Torrasque", "wait_1", CurrentPlayer);
             MoveUnit(1, "Torrasque", CurrentPlayer, "wait_all", foesLocation);
-            Order("Torrasque", CurrentPlayer, "Anywhere", Attack, "Anywhere");
+            Order("Torrasque", CurrentPlayer, "Anywhere", Attack, foesLocation);
             ef.effect("Guardian", foesLocation, "air");
             ef.effect("Zergling", foesLocation, "ground");
         }
         if (timer == 14) {
-            const foesLocation = $L("p1_foes") + cp;
             ef.effect("Scourge", foesLocation, "air");
         }
         if (timer == 26) {
-            const effectLocation = $L("p1_act_1") + cp;
             MoveLocation(effectLocation, "Torrasque", CurrentPlayer, "Anywhere");
-            ef.effect("Zergling", effectLocation, "ground");
+            ef.effect("Zergling", effectLocation, "burrowed");
             KillUnit("Torrasque", CurrentPlayer);
+            psObj.q = 0;
+            timer = 0;
+        }
+    }
+    if (psObj.q == 2) {
+        var mutaliskStack;
+        MoveLocation(foesLocation, "(any unit)", Foes, characterLocation);
+        Order("Zerg Mutalisk", CurrentPlayer, "Anywhere", Move, foesLocation);
+        if (timer < 5) {timer += 1;}
+        if (timer == 0) {
+            speaker.localAudio("staredit\\wav\\Explosion3.ogg", cp);
+            ef.burrowEffect("Zerg Lurker", characterLocation);
+            ef.burrowEffect("Zerg Hydralisk", characterLocation);
+            ef.effect("Zergling", characterLocation, "burrowed");
+        }
+        if (timer == 4) {
+            ef.effect("Arbiter", characterLocation, "air");
+            ef.effect("Recall", characterLocation, "scan");
+            CreateUnitWithProperties(1, "Zerg Mutalisk", characterLocation, CurrentPlayer, UnitProperty(invincible = true));
+        }
+        if (timer == 5) {
+            if (mutaliskStack <= 14) {
+                MoveLocation(effectLocation, "Zerg Mutalisk", CurrentPlayer, foesLocation);
+                ef.effect("Dark Archon", effectLocation, "ground");
+                ef.effect("Zergling", effectLocation, "burrowed");
+
+                if (Bring(CurrentPlayer, Exactly, 0, "Zerg Mutalisk", foesLocation)) {
+                    MoveLocation(effectLocation2, "Zerg Mutalisk", CurrentPlayer, "Anywhere");
+                    const x, y = dwrand() % 8, dwrand() % 8;
+                    addloc(effectLocation2, x, y);
+                    ef.effect("Goliath", effectLocation2, "ground");
+                } else {
+                    Order("Kukulza (Mutalisk)", CurrentPlayer, "Anywhere", Move, foesLocation);
+                    Order("Kukulza (Mutalisk)", CurrentPlayer, "Anywhere", Attack, foesLocation);
+                    foreach (k : tL.Timeline(2)) {
+                        if (k == 0) {
+                            CreateUnitWithProperties(2, "Kukulza (Mutalisk)", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+                            GiveUnits(2, "Kukulza (Mutalisk)", CurrentPlayer, waitLocation, P12);
+                        }
+                        if (k == 1) {
+                            for (var _ = 0; _ < 1; _++) {
+                                CreateUnitWithProperties(4, "Zerg Guardian", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+                                CreateUnitWithProperties(2, "Kukulza (Guardian)", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+                                MoveUnit(4, "Zerg Guardian", CurrentPlayer, "wait_all", effectLocation);
+                                MoveUnit(2, "Kukulza (Guardian)", CurrentPlayer, "wait_all", effectLocation);
+                                RemoveUnit("Zerg Guardian", CurrentPlayer);
+                                GiveUnits(2, "Kukulza (Mutalisk)", P12, waitLocation, CurrentPlayer);
+                                for (var __ = 0; __ < 2; __++) {
+                                    MoveLocation(effectLocation2, "Kukulza (Guardian)", CurrentPlayer, foesLocation);
+                                    RemoveUnitAt(1, "Kukulza (Guardian)", "Anywhere", CurrentPlayer);
+                                    MoveUnit(1, "Kukulza (Mutalisk)", CurrentPlayer, waitLocation, effectLocation2);
+                                    ef.effect("Ultralisk", effectLocation2, "ground");
+                                    ef.effect("Zergling", effectLocation2, "burrowed");
+                                }
+                                mutaliskStack += 1;
+                            }
+                        }
+                    }
+                }
+            } else {
+                foreach (k : py_range(8)) {
+                    MoveLocation(effectLocation2, "Zerg Mutalisk", CurrentPlayer, "Anywhere");
+                    const x = py_eval('int(math.cos(k * math.pi / 4) * 30)');
+                    const y = py_eval('int(math.sin(k * math.pi / 4) * 30)');
+                    addloc(effectLocation2, x, y);
+                    ef.effect("Siege Tank", effectLocation2, "ground");
+                    ef.effect("Dark Archon", effectLocation2, "ground");
+                }
+                KillUnit("Zerg Mutalisk", CurrentPlayer);
+                KillUnit("Kukulza (Mutalisk)", CurrentPlayer);
+                RemoveUnitAt(All, "Protoss Arbiter", waitLocation, P12);
+                psObj.q = 0;
+                timer = 0;
+                mutaliskStack = 0;
+            }
         }
     }
 }
