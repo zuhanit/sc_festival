@@ -49,3 +49,9 @@ function effect(target: fxType.TrgImage, location: TrgLocation, type:fxType.Effe
     CreateUnit(1, unit, location, P8);
     SetMemoryXEPD(epd + 0x110/4, SetTo, 1, 0xFFFF);
 }
+
+function burrowEffect(target: TrgUnit, location: TrgLocation) {
+    const epd = CUnit.nextUnitEPD();
+    CreateUnitWithProperties(1, target, location, P8, UnitProperty(burrowed = true, invincible = true));
+    SetMemoryXEPD(epd + 0x110/4, SetTo, 1, 0xFFFF);
+}
