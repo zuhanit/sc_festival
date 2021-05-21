@@ -1,5 +1,6 @@
 import player.player;
 import player.skill;
+import player.queue;
 
 const skillUnits = [$U("qUnit"), $U("wUnit"), $U("eUnit"), $U("healUnit"), $U("infoUnit")];
 const skillManas = [15, 20, 30, 20, 0];
@@ -7,7 +8,7 @@ const skillManas = [15, 20, 30, 20, 0];
 function loop() {
     for (var p = 0; p < 6; p++) {
         const pObj = player.Player.cast(player.players[p]);
-        const psObj = skill.Skill.cast(player.playersSkill[p]);
+        const pqObj = queue.Queue.cast(player.playersQueue[p]);
         const epd = pObj.epd;
         SetMemoryEPD(epd + 0x9C/4, SetTo, 228 + 228 * 65536);
         SetMemoryXEPD(epd + 0xA2/4, SetTo, 228, 0xFFFF);
@@ -16,7 +17,7 @@ function loop() {
                 if (MemoryXEPD(epd + 0xA2/4, AtLeast, skillManas[i] * 256 * 65536 , 0xFFFF0000)) {
                     SetMemoryEPD(epd + 0x98/4, SetTo, 0 + 228 * 65536);
                     SetMemoryEPD(epd + 0xA2/4, Subtract, skillManas[i] * 256 * 65536);
-                    psObj.enqueue(i + 1);
+                    pqObj.enqueue(i + 1);
                 } else {
                     setcurpl(p);
                     DisplayText("\x04\x13마나가 부족합니다!");

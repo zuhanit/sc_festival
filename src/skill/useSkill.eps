@@ -1,12 +1,17 @@
 import player.player;
 import player.skill;
+import character.character;
 
 function loop() {
+    const oldcp = getcurpl();
     for (var p = 0; p < 6; p++) {
         setcurpl(p);
         const pObj = player.Player.cast(player.players[p]);
-        const psObj = player.Player.cast(player.playersSkill[p]);
-        const cObj = character.Character.cast(character.characters[psObj.character]);
-        obj.skillFuncPtr(pObj, psObj, cObj);
+        const characterObj = character.Character.cast(character.characters[p]);
+        const characterUnit = characterObj.unit;
+        const moveLocation = $L("p1_move_5x5") + p;
+        MoveLocation(moveLocation, characterUnit, CurrentPlayer, "Anywhere");
+        pObj.skillFuncPtr();
     }
+    setcurpl(oldcp);
 }
