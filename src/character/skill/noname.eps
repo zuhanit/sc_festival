@@ -1,3 +1,33 @@
+import player.skill;
+import player.queue;
+import player.player;
+import tools.effect as ef;
+import tools.speaker;
+import timeline as tL;
+import py_math;
+
+var timer;
+
 function skill() {
-    
+    const cp = getcurpl();
+    const characterLocation = $L("p1_move_5x5") + cp;
+    const foesLocation = $L("p1_foes") + cp;
+    const effectLocation = $L("p1_act_1") + cp;
+    const effectLocation2 = $L("p1_act_1") + cp;
+    const waitLocation = $L("wait_1") + cp;
+
+    const psObj = skill.Skill.cast(player.playersSkill[cp]);
+    const pqObj = queue.Queue.cast(player.playersQueue[cp]);
+
+    if (psObj.using() == 0) {
+        if (pqObj.read(0) == 1) {
+            DisplayText("\t\x18(\x07Q\x18) \x04잘라내기");
+            CreateUnitWithProperties(1, "Protoss Arbiter", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+            CreateUnitWithProperties(1, "Zerg Mutalisk", waitLocation, CurrentPlayer, UnitProperty(invincible = true));
+            GiveUnits(1, "Protoss Arbiter", CurrentPlayer, waitLocation, P12);
+            GiveUnits(1, "Zerg Mutalisk", CurrentPlayer, waitLocation, P12);
+            pqObj.dequeue();
+            psObj.q = 1;
+        }
+    }
 }
