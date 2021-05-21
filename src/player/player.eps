@@ -18,10 +18,12 @@ object PlayerInfo {
 };
 
 import player.skill;
+import player.queue;
 
 const players = EUDArray(6);
 const playersInfo = EUDArray(6);
 const playersSkill = EUDArray(6);
+const playersQueue = EUDArray(6);
 var playerCount;
 
 function noFunc() {
@@ -32,11 +34,13 @@ function init() {
         const pObj = Player.alloc();
         const piObj = PlayerInfo.alloc();
         const psObj = skill.Skill.alloc();
+        const pqObj = queue.Queue.alloc();
+        pObj.skillFuncPtr = EUDFuncPtr(0, 0)(function(){});
+        pqObj.init();
         players[p] = pObj;
-        pObj.skillFuncPtr = EUDFuncPtr(0, 0)(f_noFunc);
         playersInfo[p] = piObj;
-        psObj.init();
         playersSkill[p] = psObj;
+        playersQueue[p] = pqObj;
         if (playerexist(p)) {
             const obj = PlayerInfo.cast(playersInfo[p]);
             obj.exist = 1;

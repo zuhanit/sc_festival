@@ -1,0 +1,26 @@
+object Queue {
+    var queue: EUDArray;
+    var front;
+    var rear;
+
+    function enqueue(x) {
+        this.queue[this.rear] = x;
+        this.rear = this.rear + 1 % 20;
+    }
+
+    function dequeue() {
+        const data = this.queue[this.front];
+        this.queue[this.front] = 0;
+        this.front = this.front + 1 % 20;
+        return data;
+    }
+
+    function read(x) {
+        const data = this.queue[this.front + x];
+        return data;
+    }
+
+    function init() {
+        this.queue = EUDArray(20);
+    }
+};
